@@ -25,16 +25,18 @@
 
 ## 预览
 
-> 将你的截图放在 `docs/preview.png`，然后取消下面这行注释
+<!-- > 将你的截图放在 `docs/preview.png`，然后取消下面这行注释 -->
 
 <!-- ![预览截图](docs/preview.png) -->
 
+![预览截图](assets/image.png)
 ---
 
 ## 项目结构
 
 ```
 PTab/
+├── assets/                    # 仓库静态资源
 ├── public/
 │   ├── manifest.json          # Chrome 扩展配置（MV3）
 │   ├── icon.png               # 扩展图标 48x48 64x64 128x128
