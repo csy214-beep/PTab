@@ -1,0 +1,360 @@
+/* ══════════════════════════════════════════════
+   字体引入：Playfair Display（时钟大字）+ Noto Serif SC（中英通用衬线）
+   ══════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap');
+
+/* ── CSS 变量（主题色由 App.jsx 通过 style 注入） ── */
+:root {
+  --accent:       #f0c040;
+  --glass:        rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --text:         rgba(255, 255, 255, 0.95);
+  --text-dim:     rgba(255, 255, 255, 0.55);
+}
+
+/* ── 全局重置 ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;        /* 新标签页不需要滚动条 */
+  background: #0a0a14;     /* 视频加载前的占位色 */
+}
+
+/* ══════════════════════════════════════════════
+   布局：app → video-wrapper（绝对定位底层） + content（相对定位前景）
+   ══════════════════════════════════════════════ */
+
+.app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  font-family: 'Noto Serif SC', serif;
+  color: var(--text);
+}
+
+/* ── 视频层 ── */
+
+.video-wrapper {
+  position: absolute;
+  inset: 0;          /* 等价于 top/right/bottom/left: 0 */
+  z-index: 0;
+}
+
+.video-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 视频裁剪填满，不留黑边 */
+}
+
+/* 视频加载失败时的兜底渐变背景 */
+.video-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0a0a2e 0%, #1a1a3e 50%, #0d1b2a 100%);
+}
+
+/* 遮罩层：透明度由 overlayOpacity prop 控制 */
+.video-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+/* ── 前景内容区 ── */
+
+.content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* 时钟 + 问候语居中 */
+  gap: 1.4rem;
+}
+
+/* ══════════════════════════════════════════════
+   时钟
+   ══════════════════════════════════════════════ */
+
+.clock {
+  text-align: center;
+  user-select: none; /* 防止误选中文字 */
+}
+
+/* 时间行容器：HH:MM 和秒数并排，底部对齐 */
+.clock-time {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.4rem;
+  line-height: 1;
+}
+
+/* 大字 HH:MM —— 响应式字号，最小 4.5rem，最大 9rem */
+.clock-hm {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(4.5rem, 12vw, 9rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow:
+    0 0 60px rgba(255, 255, 255, 0.12),
+    0 2px 20px rgba(0, 0, 0, 0.6);
+}
+
+/* 小字秒数，用主题色高亮 */
+.clock-sec {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.5rem, 3.5vw, 3rem);
+  font-weight: 400;
+  color: var(--accent);      /* 使用 CSS 变量，跟随用户选择的主题色 */
+  margin-bottom: 0.7rem;     /* 与 HH:MM 底部对齐微调 */
+  opacity: 0.9;
+}
+
+/* 日期行 */
+.clock-date {
+  margin-top: 0.8rem;
+  font-size: clamp(0.7rem, 1.4vw, 0.95rem);
+  letter-spacing: 0.18em;
+  color: var(--text-dim);
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════════════
+   问候语
+   ══════════════════════════════════════════════ */
+
+.greeting {
+  font-size: clamp(0.85rem, 1.6vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.1em;
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* ══════════════════════════════════════════════
+   设置按钮（右下角）
+   ══════════════════════════════════════════════ */
+
+.settings-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.8rem;
+  z-index: 10;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 1rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: background 0.2s, transform 0.3s;
+}
+
+.settings-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transform: rotate(45deg); /* 悬停时旋转 45° 的小彩蛋 */
+}
+
+/* ══════════════════════════════════════════════
+   设置面板
+   ══════════════════════════════════════════════ */
+
+/* 全屏半透明遮罩 */
+.settings-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 面板主体 */
+.settings-panel {
+  width: min(400px, 92vw);
+  background: rgba(14, 14, 24, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* 面板标题栏 */
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.6rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.settings-header h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.settings-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.settings-close:hover { color: #fff; }
+
+/* 面板内容区 */
+.settings-body {
+  padding: 1.2rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+/* 单个设置项 */
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* 设置项标签 */
+.settings-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 下拉菜单 */
+.settings-select {
+  padding: 0.5rem 0.8rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 8px;
+  color: #fff;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.87rem;
+  outline: none;
+  cursor: pointer;
+}
+
+/* 提示文字 */
+.settings-hint {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 1.6;
+}
+.settings-hint code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* 透明度滑块 */
+.settings-slider {
+  width: 100%;
+  accent-color: var(--accent); /* 滑块颜色跟随主题色 */
+  cursor: pointer;
+}
+
+.settings-slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* 颜色选择区 */
+.color-presets {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+/* 预设色块按钮 */
+.color-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+}
+.color-dot:hover  { transform: scale(1.15); }
+.color-dot.active { border-color: #fff; transform: scale(1.15); } /* 选中态：白色外框 */
+
+/* 自定义颜色输入框 */
+.color-picker {
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+}
+
+/* 面板底部按钮区 */
+.settings-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  padding: 0.9rem 1.6rem 1.2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.btn-cancel,
+.btn-save {
+  padding: 0.45rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.btn-cancel {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.55);
+}
+.btn-save {
+  background: var(--accent); /* 保存按钮用主题色 */
+  color: #000;
+  font-weight: 600;
+}
+.btn-cancel:hover,
+.btn-save:hover {
+  opacity: 0.8;
+  transform: scale(1.02);
+}
