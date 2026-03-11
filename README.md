@@ -159,4 +159,4 @@ const PRESET_VIDEOS = [
 
 ## License
 
-[MIT](LICENSE) © 2024
+[MIT](LICENSE)
