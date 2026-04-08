@@ -10,8 +10,8 @@
 <!-- ![版本](https://img.shields.io/badge/版本-1.0.0-gold) -->
 
 ![Manifest](https://img.shields.io/badge/Manifest-V3-blue)
-![React](https://img.shields.io/badge/React-18-61dafb?logo=react)
-![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite)
+![React](https://img.shields.io/badge/React-19-61dafb?logo=react)
+![Vite](https://img.shields.io/badge/Vite-7-646cff?logo=vite)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
 每次打开新标签页，都是一段属于自己的安静时刻。
@@ -25,6 +25,7 @@
 - **智能问候语** — 根据时段（清晨 / 上午 / 下午 / 傍晚 / 深夜）随机显示
 - **个性化设置** — 切换视频、调整遮罩深度、自定义主题色
 - **轻量无依赖** — 数据存 localStorage，不联网，无追踪
+- **自动视频扫描** — 自动检测 videos 目录中的视频文件
 
 ---
 
@@ -42,8 +43,7 @@ PTab/
 ├── public/
 │   ├── manifest.json          # Chrome 扩展配置（MV3）
 │   ├── icon.png               # 扩展图标 48x48 64x64 128x128
-│   └── videos/
-│       └── background.mp4     # 把你的视频放这里
+│   └── videos/                # 视频文件目录（自动扫描）
 ├── src/
 │   ├── components/
 │   │   ├── VideoBackground.jsx  # 全屏视频 + 遮罩
@@ -52,7 +52,10 @@ PTab/
 │   │   └── SettingsPanel.jsx    # 设置面板
 │   ├── App.jsx                  # 根组件 / 状态管理
 │   ├── App.css                  # 全局样式
-│   └── main.jsx                 # 入口文件
+│   ├── main.jsx                 # 入口文件
+│   └── video-list.generated.js  # 自动生成的视频列表
+├── vite.config.js               # Vite 配置
+├── vite-plugin-videoscan.js     # 视频扫描插件
 └── index.html
 ```
 
@@ -80,10 +83,13 @@ npm install
 
 ### 3. 放入视频
 
-将你的背景视频复制到 `public/videos/`，命名为 `background.mp4`。
+将你的背景视频复制到 `public/videos/` 目录。
 
 > 推荐：MP4 格式，1920×1080，50MB 以内，15 秒以上（循环播放）
 > 免费素材可以去 [Pexels](https://www.pexels.com/videos/) 或 [Pixabay](https://pixabay.com/videos/) 下载
+> 支持格式：.mp4、.webm、.ogg
+> 视频会自动被扫描并出现在设置面板的下拉菜单中
+> 视频名称最好为英文，否则可能无法载入
 
 ### 4. 本地预览
 
@@ -113,16 +119,10 @@ npm run build
 
 ### 添加更多视频
 
-把视频文件放入 `public/videos/`，然后在 `src/components/SettingsPanel.jsx` 里的 `PRESET_VIDEOS` 数组中追加一行：
+把视频文件放入 `public/videos/` 目录，视频会自动被扫描并出现在设置面板的视频选择下拉菜单中，无需手动编辑代码。
 
-```js
-const PRESET_VIDEOS = [
-  { label: "Default  (background.mp4)", value: "videos/background.mp4" },
-  { label: "Ocean    (ocean.mp4)", value: "videos/ocean.mp4" }, // 新增
-];
-```
-
-重新 `npm run build`，刷新扩展即可。
+> 开发模式下添加/删除视频会自动触发页面刷新
+> 构建时会自动扫描并生成视频列表
 
 ### 修改问候语
 
@@ -138,8 +138,8 @@ const PRESET_VIDEOS = [
 
 | 技术         | 用途                             |
 | ------------ | -------------------------------- |
-| React 18     | UI 组件与状态管理                |
-| Vite 5       | 构建工具                         |
+| React 19.2.0 | UI 组件与状态管理                |
+| Vite 7.3.1   | 构建工具                         |
 | CSS3         | 样式（毛玻璃 / 动画 / CSS 变量） |
 | localStorage | 设置与数据持久化                 |
 | Chrome MV3   | 扩展规范                         |

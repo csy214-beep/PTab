@@ -2,6 +2,14 @@
 
 ## 2026-04-08
 
+### 更新 README.md
+- 更新项目徽章：React 19.2.0、Vite 7.3.1
+- 更新项目结构：添加 video-list.generated.js、vite.config.js、vite-plugin-videoscan.js
+- 更新功能列表：添加自动视频扫描功能
+- 更新视频添加说明：改为自动扫描方式
+- 更新自定义视频说明：移除手动编辑代码的要求
+- 更新技术栈版本：React 19.2.0、Vite 7.3.1
+
 ### 更新所有文档
 - overview.md：更新目录结构、默认设置、自动视频扫描说明
 - architecture.md：更新关键设计模式、Vite 插件说明
