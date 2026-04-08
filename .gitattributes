@@ -1,0 +1,62 @@
+# 设置默认行为，让 Git 自动处理文本文件的换行符
+* text=auto
+
+# 将特定的文件类型强制识别为指定的语言，以影响 GitHub 的语言统计
+# 如果你的 React 组件使用 .js 扩展名但包含 JSX 语法，取消下一行的注释
+# *.js linguist-language=JSX
+
+# TypeScript 文件（.ts 和 .tsx）通常会被自动识别，但可以显式指定
+*.ts linguist-language=TypeScript
+*.tsx linguist-language=TypeScript
+
+# 样式文件：将 .css 文件识别为 CSS，如果使用预处理器可相应调整
+*.css linguist-language=CSS
+*.scss linguist-language=SCSS
+*.less linguist-language=Less
+
+# HTML 文件
+*.html linguist-language=HTML
+
+# Markdown 文档
+*.md linguist-language=Markdown
+
+# JSON 配置文件
+*.json linguist-language=JSON
+
+# YAML 文件
+*.yml linguist-language=YAML
+*.yaml linguist-language=YAML
+
+# JavaScript 配置文件（如 vite.config.js）通常保持为 JavaScript
+# 但如果它们包含 JSX，可以单独指定路径，例如：
+# src/components/**/*.js linguist-language=JSX
+
+# 针对生成的文件或第三方文件，可以排除在语言统计之外
+# 例如打包后的文件、锁文件等
+package-lock.json linguist-generated=true
+yarn.lock linguist-generated=true
+pnpm-lock.yaml linguist-generated=true
+dist/** linguist-vendored
+build/** linguist-vendored
+
+# 二进制文件（如图片、字体）无需文本处理
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text  # SVG 虽然是图片，但本质是文本，可以保留为 text
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+
+# 确保 Git 在检出和提交时使用正确的换行符
+# 根据团队习惯，可以统一为 LF
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
