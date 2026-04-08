@@ -2,6 +2,11 @@
 
 > 以本地视频为背景的沉浸式 Chrome 新标签页扩展
 
+**AI 开发文档**: [docs/.ai/index.md](docs/.ai/index.md)
+
+>[!NOTE]
+> 本项目90%以上代码由AI生成
+
 <!-- ![版本](https://img.shields.io/badge/版本-1.0.0-gold) -->
 
 ![Manifest](https://img.shields.io/badge/Manifest-V3-blue)
@@ -25,11 +30,8 @@
 
 ## 预览
 
-<!-- > 将你的截图放在 `docs/preview.png`，然后取消下面这行注释 -->
-
-<!-- ![预览截图](docs/preview.png) -->
-
 ![预览截图](assets/image.png)
+
 ---
 
 ## 项目结构

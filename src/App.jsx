@@ -3,21 +3,33 @@ import VideoBackground from './components/VideoBackground'
 import Clock from './components/Clock'
 import Greeting from './components/Greeting'
 import SettingsPanel from './components/SettingsPanel'
+import { PRESET_VIDEOS } from "./video-list.generated.js";
 import './App.css'
 
 // 默认设置项
 const DEFAULT_SETTINGS = {
-  videoFile:       'videos/background.mp4', // 视频路径（相对于扩展根目录）
-  overlayOpacity:  0.35,                    // 遮罩透明度，0 = 完全透明，1 = 全黑
-  accentColor:     '#f0c040',               // 主题色（用于时钟秒数等高亮）
-}
+  videoFile: PRESET_VIDEOS[0].value, // 使用扫描到的第一个视频
+  overlayOpacity: 0.35, // 遮罩透明度，0 = 完全透明，1 = 全黑
+  accentColor: "#f0c040", // 主题色（用于时钟秒数等高亮）
+};
 
 export default function App() {
   // 从 localStorage 读取已保存的设置，没有则用默认值
   const [settings, setSettings] = useState(() => {
     try {
       const saved = localStorage.getItem('newtab_settings')
-      return saved ? JSON.parse(saved) : DEFAULT_SETTINGS
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // 检查保存的视频是否在可用列表中
+        const videoExists = PRESET_VIDEOS.some(
+          (v) => v.value === parsed.videoFile,
+        );
+        if (!videoExists) {
+          parsed.videoFile = PRESET_VIDEOS[0].value;
+        }
+        return parsed;
+      }
+      return DEFAULT_SETTINGS;
     } catch {
       return DEFAULT_SETTINGS
     }
